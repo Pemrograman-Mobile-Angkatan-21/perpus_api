@@ -6,9 +6,11 @@ class Pengarang {
     static create = async (req, res) => {
         try {
             const data = req.body
+            data.tgl_lahir = new Date(data.tgl_lahir)
             await prisma.pengarang.create({ data: data })
             res.json({ status: true, message: 'Berhasil menambah pengarang' })
         } catch (error) {
+            console.log(error)
             res.json({ status: false, message: 'Terjadi kesalahan saat input pengarang' })
         }
     }
@@ -25,7 +27,7 @@ class Pengarang {
     static findById = async (req, res) => {
         try {
             const idPengarang = Number(req.params.id)
-            const findData = await prisma.pengarang.findMany({ where: { id_pengarang: idPengarang } })
+            const findData = await prisma.pengarang.findUnique({ where: { id_pengarang: idPengarang } })
             res.json({ status: true, message: "Berhasil memuat", data: findData })
         } catch (error) {
             res.json({ status: false, message: 'Terjadi kesalahan saat menampilkan data' })
@@ -36,8 +38,9 @@ class Pengarang {
         try {
             const idPengarang = Number(req.params.id)
             const data = req.body
+            data.tgl_lahir = new Date(data.tgl_lahir)
             await prisma.pengarang.update({ where: { id_pengarang: idPengarang }, data: data })
-            res.json({ status: true, message: 'Berhasil menambah pengarang' })
+            res.json({ status: true, message: 'Berhasil merubah pengarang' })
         } catch (error) {
             res.json({ status: false, message: 'Terjadi kesalahan saat merubah data' })
         }
